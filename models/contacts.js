@@ -70,7 +70,24 @@ const addContact = async ({name, email, phone }) => {
 };
 
 const updateContact = async (contactId, body) => {
+  try {
+    const contacts = await listContacts();
+    const index = contacts.findIndex(contact => contact.id === contactId);
 
+    if (index === -1) {
+      return null;
+    }
+
+    const updatedContact = { ...contacts[index], ...body };
+    contacts[index] = updatedContact;
+
+    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+
+    return updatedContact;
+  } catch (error) {
+    console.error("Error updategin cotnact: ", error);
+    throw error;
+  }
 }
 
 module.exports = {
