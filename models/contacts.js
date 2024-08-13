@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-
+const { nanoid } = require('nanoid');
 
 const contactsPath = path.join(__dirname, 'contacts.json');
 
@@ -8,6 +8,7 @@ const listContacts = async () => {
   try {
     const data = await fs.readFile(contactsPath, 'utf-8');
     const contacts = JSON.parse(data);
+    
     return contacts;
   } catch (error) {
     console.error("Error reading contacts file: ", error);
@@ -46,8 +47,7 @@ const removeContact = async (contactId) => {
    }
  };
 
-const addContact = async ({ name, email, phone }) => {
-const { nanoid } = await import('nanoid');
+const addContact = async ({name, email, phone }) => {
 
   const newContact = {
     id: nanoid(21),
@@ -58,9 +58,10 @@ const { nanoid } = await import('nanoid');
 
   try {
     const contacts = await listContacts();
+    
     contacts.push(newContact);
 
-    await fs.writeFile(contactsPath, JSON.stringify(contact, null, 2));
+    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return newContact;
   } catch (error) {
     console.error("Error adding contact: ", error);
