@@ -1,99 +1,99 @@
-const fs = require('fs/promises');
-const path = require('path');
-const { nanoid } = require('nanoid');
+// const fs = require('fs/promises');
+// const path = require('path');
+// const { nanoid } = require('nanoid');
 
-const contactsPath = path.join(__dirname, 'contacts.json');
+// const contactsPath = path.join(__dirname, 'contacts.json');
 
-const listContacts = async () => {
-  try {
-    const data = await fs.readFile(contactsPath, 'utf-8');
-    const contacts = JSON.parse(data);
-    
-    return contacts;
-  } catch (error) {
-    console.error("Error reading contacts file: ", error);
-    throw error;
-  }
-}
+// const listContacts = async () => {
+//   try {
+//     const data = await fs.readFile(contactsPath, 'utf-8');
+//     const contacts = JSON.parse(data);
 
-const getContactById = async (contactId) => {
-  try {
-    const contacts = await listContacts();
-    const contact = contacts.find(item => item.id === contactId);
-    return contact || null;
-  } catch (error) {
-    console.error("Error getting contact by ID: ", error);
-    throw error;
-  }
-}
+//     return contacts;
+//   } catch (error) {
+//     console.error("Error reading contacts file: ", error);
+//     throw error;
+//   }
+// }
 
-const removeContact = async (contactId) => {
-  try {
-    const contacts = await listContacts();
-    const index = contacts.findIndex(contact => contact.id === contactId);
+// const getContactById = async (contactId) => {
+//   try {
+//     const contacts = await listContacts();
+//     const contact = contacts.find(item => item.id === contactId);
+//     return contact || null;
+//   } catch (error) {
+//     console.error("Error getting contact by ID: ", error);
+//     throw error;
+//   }
+// }
 
-    if (index === -1) {
-      return false;
-    }
+// const removeContact = async (contactId) => {
+//   try {
+//     const contacts = await listContacts();
+//     const index = contacts.findIndex(contact => contact.id === contactId);
 
-     contacts.splice(index, 1);
+//     if (index === -1) {
+//       return false;
+//     }
 
-     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-     return true;
+//      contacts.splice(index, 1);
 
-   } catch (error) {
-     console.error("Error removing contact:", error);
-     throw error;
-   }
- };
+//      await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+//      return true;
 
-const addContact = async ({name, email, phone }) => {
+//    } catch (error) {
+//      console.error("Error removing contact:", error);
+//      throw error;
+//    }
+//  };
 
-  const newContact = {
-    id: nanoid(21),
-    name,
-    email,
-    phone
-  };
+// const addContact = async ({name, email, phone }) => {
 
-  try {
-    const contacts = await listContacts();
-    
-    contacts.push(newContact);
+//   const newContact = {
+//     id: nanoid(21),
+//     name,
+//     email,
+//     phone
+//   };
 
-    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-    return newContact;
-  } catch (error) {
-    console.error("Error adding contact: ", error);
-    throw error;
-  }
-};
+//   try {
+//     const contacts = await listContacts();
 
-const updateContact = async (contactId, body) => {
-  try {
-    const contacts = await listContacts();
-    const index = contacts.findIndex(contact => contact.id === contactId);
+//     contacts.push(newContact);
 
-    if (index === -1) {
-      return null;
-    }
+//     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+//     return newContact;
+//   } catch (error) {
+//     console.error("Error adding contact: ", error);
+//     throw error;
+//   }
+// };
 
-    const updatedContact = { ...contacts[index], ...body };
-    contacts[index] = updatedContact;
+// const updateContact = async (contactId, body) => {
+//   try {
+//     const contacts = await listContacts();
+//     const index = contacts.findIndex(contact => contact.id === contactId);
 
-    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+//     if (index === -1) {
+//       return null;
+//     }
 
-    return updatedContact;
-  } catch (error) {
-    console.error("Error updategin cotnact: ", error);
-    throw error;
-  }
-}
+//     const updatedContact = { ...contacts[index], ...body };
+//     contacts[index] = updatedContact;
 
-module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-}
+//     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+
+//     return updatedContact;
+//   } catch (error) {
+//     console.error("Error updategin cotnact: ", error);
+//     throw error;
+//   }
+// }
+
+// module.exports = {
+//   listContacts,
+//   getContactById,
+//   removeContact,
+//   addContact,
+//   updateContact,
+// }
