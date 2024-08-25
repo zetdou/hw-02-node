@@ -3,7 +3,7 @@ const { listContacts, getContactById, removeContact, addContact, updateContact }
 
 const router = express.Router()
 
-router.get('/contacts', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const contacts = await listContacts();
     res.status(200).json(contacts);
@@ -12,7 +12,7 @@ router.get('/contacts', async (req, res, next) => {
   }
 })
 
-router.get('/contacts/:contactId', async (req, res, next) => {
+router.get('/:contactId', async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const contact = await getContactById(contactId);
@@ -27,7 +27,7 @@ router.get('/contacts/:contactId', async (req, res, next) => {
   }
 })
 
-router.post('/contacts', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
 
@@ -42,7 +42,7 @@ router.post('/contacts', async (req, res, next) => {
   }
 });
 
-router.delete('/contacts/:contactId', async (req, res, next) => {
+router.delete('/:contactId', async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const wasDeleted = await removeContact(contactId);
@@ -57,7 +57,7 @@ router.delete('/contacts/:contactId', async (req, res, next) => {
   }
 });
 
-router.put('/contacts/:contactId', async (req, res, next) => {
+router.put('/:contactId', async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const body = req.body;
