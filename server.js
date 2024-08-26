@@ -15,4 +15,4 @@ mongoose.connect(process.env.DB_URL).then((db) => {
 }).catch((err) => {
   console.log(err.red);
   process.exit(1);
-});;
+});
