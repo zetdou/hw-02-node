@@ -1,3 +1,56 @@
+const fetchAll = async (req, res, next) => {
+    try {
+        const contacts = await getAllContacts()
+        res.json(contacts);
+    } catch (err) {
+        next(error)
+    }
+}
+
+const fetchById = async (req, res, next) => {
+    try {
+        const contacts = await getAllContacts(req.params.id)
+        if(contacts) {
+            res.json(contacts);
+        } else {
+            next()
+        }
+    } catch (err) {
+        next(err)
+    }
+}
+
+const insertContact = async (req, res, next) => {
+    const {name, email, phone} = req.body;
+    try {
+        const newContact = await createContact({
+            name,
+            email,
+            phone
+        })
+        res.status(201).json(newContact);
+    } catch (err) {
+        next(err);
+    }
+}
+
+const updateContactDetails = async (req, res, next) => {
+    const {id} = req.params;
+    try {
+        const updatedContact = await updateExistingContact({
+            id,
+            toUpdate: req.body,
+        })
+        if(!updatedContact) {
+            next() 
+        } else {
+            res.json(updateContact)
+        } catch (err) {
+            next(err)
+        }
+    }
+}
+
 // const contactService = require("../services/contactService");
 
 // async function getAllContacts(req, res, next) {
