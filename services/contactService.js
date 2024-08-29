@@ -24,7 +24,7 @@ const updateExistingContact = async ({id, toUpdate}) => {
 }
 
 const deleteContact = (id) => {
-    return Contact.findByIdAndRemove({_id: id});
+    return Contact.deleteOne({_id: id});
 }
 
 module.exports = {

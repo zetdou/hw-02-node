@@ -1,3 +1,5 @@
+const {getAllContacts, createContact, updateExistingContact, deleteContact, getContactById} = require("../services/contactService");
+
 const fetchAll = async (req, res, next) => {
     try {
         const contacts = await getAllContacts()
@@ -9,7 +11,7 @@ const fetchAll = async (req, res, next) => {
 
 const fetchById = async (req, res, next) => {
     try {
-        const contacts = await getAllContacts(req.params.id)
+        const contacts = await getContactById(req.params.id);
         if(contacts) {
             res.json(contacts);
         } else {
@@ -44,12 +46,32 @@ const updateContactDetails = async (req, res, next) => {
         if(!updatedContact) {
             next() 
         } else {
-            res.json(updateContact)
-        } catch (err) {
-            next(err)
-        }
+            res.json(updatedContact)
+        } 
+    } catch (err) {
+        next(err)
     }
 }
+
+const removeContact = async (req, res, next) => {
+    const {id} = req.params;
+    try {
+        await deleteContact(id);
+        res.status(204).send({
+            message: "Contact deleted!"
+        });
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports = {
+    fetchAll,
+    fetchById,
+    insertContact,
+    updateContactDetails,
+    removeContact
+};
 
 // const contactService = require("../services/contactService");
 
@@ -109,10 +131,4 @@ const updateContactDetails = async (req, res, next) => {
 //   }
 // }
 
-// module.exports = {
-//   getAllContacts,
-//   getContactById,
-//   createContact,
-//   updateExistingContact,
-//   deleteContact,
-// };
+
