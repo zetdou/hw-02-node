@@ -1,4 +1,4 @@
-const moongose = require("mongoose");
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ContactSchema = new Schema(
@@ -19,7 +19,7 @@ const ContactSchema = new Schema(
         minLength: 7,
         maxLength: 15,
     },
-    favourite: {
+    favorite: {
         type: Boolean,
         default: false,
     },
