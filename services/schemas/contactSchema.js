@@ -22,8 +22,10 @@ const ContactSchema = new Schema(
     favorite: {
         type: Boolean,
         default: false,
-    },
-});
+    }
+}, 
+{versionKey: false}
+);
 
 const Contact = mongoose.model("Contact", ContactSchema, "contacts");
 module.exports = Contact;
