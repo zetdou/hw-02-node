@@ -38,16 +38,29 @@ const insertContact = async (req, res, next) => {
 
 const updateContactDetails = async (req, res, next) => {
     const {id} = req.params;
+    const {name, email, phone} = req.body;
     try {
-        const updatedContact = await updateExistingContact({
-            id,
-            toUpdate: req.body,
-        })
+        const updatedContact = await updateExistingContact(id, {name, email, phone});
         if(!updatedContact) {
             next() 
         } else {
             res.json(updatedContact)
         } 
+    } catch (err) {
+        next(err)
+    }
+}
+
+const updateContactStatus = async (req, res, next) => {
+    const {id} = req.params;
+    const {favorite = false} = req.body;
+    try {
+        const updatedStatus = await updateExistingContact(id, {favorite});
+        if(!updatedStatus) {
+            next()
+        } else {
+            res.json(updatedStatus)
+        }
     } catch (err) {
         next(err)
     }
@@ -70,65 +83,8 @@ module.exports = {
     fetchById,
     insertContact,
     updateContactDetails,
-    removeContact
+    removeContact,
+    updateContactStatus
 };
-
-// const contactService = require("../services/contactService");
-
-// async function getAllContacts(req, res, next) {
-//   try {
-//     const contacts = await contactService.listContacts();
-//     res.json(contacts);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// async function getContactById(req, res, next) {
-//   try {
-//     const contact = await contactService.getContactById(req.params.contactId);
-//     if (contact) {
-//       res.json(contact);
-//     } else {
-//       res.status(404).json({ message: "Not found" });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// async function createContact(req, res, next) {
-//   try {
-//     const newContact = await contactService.addContact(req.body);
-//     res.status(201).json(newContact);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// async function updateExistingContact(req, res, next) {
-//   try {
-//     const updatedContact = await contactService.updateContact(
-//       req.params.contactId,
-//       req.body,
-//     );
-//     res.json(updatedContact);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// async function deleteContact(req, res, next) {
-//   try {
-//     const wasDeleted = await contactService.removeContact(req.params.contactId);
-//     if (wasDeleted) {
-//       res.status(200).json({ message: "Contact removed!" });
-//     } else {
-//       res.status(404).json({ message: "Not found" });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// }
 
 
