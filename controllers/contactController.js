@@ -11,7 +11,7 @@ const fetchAll = async (req, res, next) => {
     const contacts = await getAllContacts();
     res.json(contacts);
   } catch (err) {
-    next(error);
+    next(err);
   }
 };
 
