@@ -1,6 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const {jwtStrategy} = require("./config/jwt");
+const {errorMiddleware} = require("./middleware/errorMiddleware");
+
 
 const contactsRouter = require("./routes/api/contacts");
 const authRouter = require("./routes/api/auth");
@@ -13,6 +16,8 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+jwtStrategy();
+
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", authRouter);
 
@@ -22,16 +27,8 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
-  if (err.name === "ValidationError") {
-    return res.status(400).json({
-      message: err.message,
-    });
-  }
-  res.status(500).json({
-    message: err.message,
-  });
-});
+app.use(errorMiddleware);
+
 
 
 module.exports = app;
