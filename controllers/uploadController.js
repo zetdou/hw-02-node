@@ -3,15 +3,17 @@ const path = require("path");
 const Jimp = require("jimp");
 const { v4: uuidv4 } = require("uuid");
 const User = require("../services/schemas/userSchema");
-const { setupFolder } = require("../utils/folderUtils");
+const { setupFolder } = require("../utils/folderUtils"); // Import funkcji pomocniczej
 
 const avatarsDir = path.join(process.cwd(), "public/avatars");
 const MAX_AVATAR_WIDTH = 250;
 const MAX_AVATAR_HEIGHT = 250;
 
+// Funkcja aktualizacji awatara
 const updateAvatar = async (req, res, next) => {
   try {
-    await setupFolder(avatarsDir);
+    // Sprawdzenie, czy folder "avatars" istnieje
+    await setupFolder(avatarsDir); // Wywołanie funkcji, która sprawdza i tworzy folder
 
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -24,7 +26,7 @@ const updateAvatar = async (req, res, next) => {
 
     // Przeniesienie pliku z tmp do folderu avatars
     await fs.rename(tmpPath, avatarPath);
-    console.log("File path:", avatarPath); // Sprawdź ścieżkę do pliku
+
     // Przetwarzanie obrazu za pomocą Jimp (kadrowanie)
     const image = await Jimp.read(avatarPath);
     const w = image.bitmap.width;
@@ -54,5 +56,5 @@ const updateAvatar = async (req, res, next) => {
 };
 
 module.exports = {
-    updateAvatar,
-}
+  updateAvatar,
+};

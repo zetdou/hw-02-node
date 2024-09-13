@@ -1,10 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-const {jwtStrategy} = require("./config/jwt");
-const {errorMiddleware} = require("./middleware/errorMiddleware");
+const { jwtStrategy } = require("./config/jwt");
+const { errorMiddleware } = require("./middleware/errorMiddleware");
 const path = require("path");
-
 
 const contactsRouter = require("./routes/api/contacts");
 const authRouter = require("./routes/api/auth");
@@ -31,7 +30,5 @@ app.use((req, res) => {
 });
 
 app.use(errorMiddleware);
-
-
 
 module.exports = app;
