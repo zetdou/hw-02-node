@@ -3,6 +3,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const {jwtStrategy} = require("./config/jwt");
 const {errorMiddleware} = require("./middleware/errorMiddleware");
+const path = require("path");
 
 
 const contactsRouter = require("./routes/api/contacts");
@@ -17,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 jwtStrategy();
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", authRouter);
