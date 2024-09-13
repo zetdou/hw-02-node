@@ -32,7 +32,7 @@ const loginUser = async ({ email, password }) => {
   const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "12h" });
   user.token = token;
   await user.save();
-  return {token, user: {email: user.email, subscriptin: user.subscription}};
+  return { token, user: { email: user.email, subscriptin: user.subscription } };
 };
 
 const logoutUser = async (userId) => {
@@ -40,7 +40,7 @@ const logoutUser = async (userId) => {
   if (!user) {
     throw new Error("Not authorized");
   }
-  
+
   user.token = null;
   await user.save();
 };
