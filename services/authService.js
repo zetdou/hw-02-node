@@ -1,13 +1,13 @@
 const User = require("./schemas/userSchema");
 const jwt = require("jsonwebtoken");
 
-const registerUser = async ({ username, email, password }) => {
+const registerUser = async ({ username, email, password, avatarURL }) => {
   const userExists = await User.findOne({ email });
   if (userExists) {
     throw new Error("This email is already taken!");
   }
 
-  const newUser = new User({ username, email });
+  const newUser = new User({ username, email, avatarURL });
   await newUser.setPassword(password);
   await newUser.save();
   return newUser;

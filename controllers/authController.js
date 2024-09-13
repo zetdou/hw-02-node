@@ -1,14 +1,17 @@
+const gravatar = require("gravatar");
 const { registerUser, loginUser, logoutUser } = require("../services/authService");
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
-    const newUser = await registerUser({ username, email, password });
+    const avatarURL = gravatar.url(email, { s: "200", d: "retro" }, true);
+    const newUser = await registerUser({ username, email, password, avatarURL });
     return res.status(201).json({
       message: "User created",
       user: {
         email: newUser.email,
         subscription: newUser.subscription,
+        avatarURL: newUser.avatarURL,
       },
     });
   } catch (err) {
