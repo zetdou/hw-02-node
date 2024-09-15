@@ -37,6 +37,9 @@ const login = async (req, res, next) => {
     const { token, user } = await loginUser({ email, password });
     return res.json({ token, user });
   } catch (err) {
+    if (err.message === "Email has not been verified! Please check your inbox.") {
+      return res.status(401).json({ message: err.message });
+    }
     next(err);
   }
 };

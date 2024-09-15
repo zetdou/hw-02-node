@@ -24,6 +24,10 @@ const loginUser = async ({ email, password }) => {
     throw new Error("User not exists!");
   }
 
+  if (!user.verify) {
+    throw new Error("Email has not been verified! Please check your inbox.");
+  }
+
   const isPasswordCorrect = await user.validatePassword(password);
   if (!isPasswordCorrect) {
     throw new Error("Wrong password!");
