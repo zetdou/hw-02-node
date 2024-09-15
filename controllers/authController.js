@@ -3,7 +3,10 @@ const {
   registerUser,
   loginUser,
   logoutUser,
+  verifyUser,
+  resendVerificationEmail,
 } = require("../services/authService");
+const User = require("../services/schemas/userSchema");
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -57,9 +60,47 @@ const getCurrentUser = async (req, res, next) => {
   }
 };
 
+const verifyEmail = async (req, res, next) => {
+  const { verificationToken } = req.params;
+  
+  try {
+    const user = await verifyUser(verificationToken);
+    if (!user) {
+      const alreadyVerifiedUser = await User.findOne({ verificationToken: null, verify: true, email: req.body.email });
+      
+      if (alreadyVerifiedUser) {
+        return res.status(400).json({ message: "Email has already been verified!" });
+      }
+      return res.status(404).json({ message: "User not found!" });
+    }
+    res.status(200).json({ message: "Verification succesful!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const resendVerificationEmailHandler = async (req, res, next) => {
+  const { email } = req.body;
+
+  if(!email) {
+    return res.status(400).json({ message: "Missing required field email!" });
+  }
+  try {
+    const result = await resendVerificationEmail(email);
+    if (result === "alreadyVerified") {
+      return res.status(400).json({ message: "Verification has already been passed!" });
+    }
+    res.status(200).json({ message: "Verification email sent!" });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   signup,
   login,
   logout,
   getCurrentUser,
+  verifyEmail,
+  resendVerificationEmailHandler,
 };
