@@ -1,3 +1,5 @@
+const { v4: uuid4 } = require("uuid");
+const { sendVerificationEmail } = require("./emailService");
 const User = require("./schemas/userSchema");
 const jwt = require("jsonwebtoken");
 
@@ -7,9 +9,12 @@ const registerUser = async ({ username, email, password, avatarURL }) => {
     throw new Error("This email is already taken!");
   }
 
-  const newUser = new User({ username, email, avatarURL });
+  const verificationToken = uuid4();
+  const newUser = new User({ username, email, avatarURL, verificationToken });
   await newUser.setPassword(password);
   await newUser.save();
+
+  await sendVerificationEmail(email, verificationToken);
   return newUser;
 };
 
@@ -45,8 +50,39 @@ const logoutUser = async (userId) => {
   await user.save();
 };
 
+const verifyUser = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    return null;
+  }
+
+  user.verify = true;
+  user.verificationToken = null;
+  await user.save();
+
+  return user;
+};
+
+const resendVerificationEmail = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.verify) {
+    return "alreadyVerified";
+  }
+
+  await sendVerificationEmail(user.email, user.verificationToken);
+
+  return "resent";
+};
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+  verifyUser,
+  resendVerificationEmail,
 };
